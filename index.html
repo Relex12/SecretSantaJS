@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<!-- <link rel="stylesheet" href="./css/style-grapesjs.css"> -->
+		<!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/Relex12/Relex12.github.io/master/assets/css/style.scss"> -->
+		<link rel="stylesheet" href="./css/style.css">
+	</head>
+
+	<body><main class="container-lg px-3 my-5 markdown-body">
+		<div><h1>Secret-Santa.JS
+		</h1></div>
+
+		<div>
+			<button type="button" class="collapsible"><h2><a href="#">Qu’est-ce que c’est ?
+				<!-- <img src="https://static.thenounproject.com/png/1144832-200.png" width="30" height="30"></img> -->
+			</a></h2></button>
+			<div class="bdg-sect" style="display: none">
+				<p class="paragraph">Le Secret Santa ou Père Noël surprise est une manière originale de fêter Noël : chaque participant offre un cadeau à personne, piochée au hasard dans une boîte contenant le nom de participant. Le but est de garder secret le nom pioché par chacun, afin de garder la surprise jusqu'au dernier moment. Cependant :
+				</p><ul>
+				<li>si une personne pioche son propre nom, il faut recommencer tout le tirage ;</li>
+				<li>si plusieurs personnes ne se connaissent pas très bien, il peut être difficile de trouver un bon cadeau ;</li>
+				<li>si une personne pioche le même participant qu'une année précédente, cela peut être redondant.</li>
+				</ul>
+				<p class="paragraph">Pour éviter ces problèmes, utilisez <b>Secret-Santa.JS</b>.</p>
+			</div>
+		</div>
+
+		<div>
+			<button type="button" class="collapsible"><h2><a href="#">Comment l’utiliser ?</a></h2></button>
+			<div class="bdg-sect" style="display: none">
+				<p class="paragraph">Le tirage au sort se fait en trois étapes. <b>TODO: explications</b></p>
+			</div>
+		</div>
+
+
+		<div>
+			<h2>Faire un tirage</h2>
+			<div id="step-1">
+				<h3>Étape 1</h3>
+				<fieldset>
+					<div>
+						<label>Mode de résultats :</label>
+				    <div>
+				      <input type="radio" id="phone" name="mode" value="phone">
+				      <label for="phone">Afficher les résultats sur cet appareil chacun son tour</label>
+				    </div>
+				    <div>
+				      <input type="radio" id="mail" name="mode" value="mail">
+				      <label for="mail">Envoyer les résulats par mail</label>
+				    </div>
+					</div><p></p>
+					<div>
+						<label>Cadeaux par personne :</label>
+						<input type="number" id="gifts-person" name="gifts-person" value="1">
+					</div><p></p>
+					<div class="mail-only">
+						<input type="checkbox" id="test-mail" name="test-mail">
+						<label for="test-mail">Envoyer un mail de test avant les résultats</label>
+			    </div><p></p>
+					<div class="mail-only">
+						<div><label for="message">Ajouter un message personnel :</label></div>
+						<textarea id="message" name="message" rows="4" cols="50"></textarea>
+			    </div>
+					<div>
+						<label>Montant pour les cadeaux :</label>
+						<input type="number" id="amount" name="amount">
+					</div>
+				</fieldset>
+				<p></p><button id="confirm-step-1" type="button">Valider et passer à l'étape suivante</button>
+			</div>
+
+			<div id="step-2" style="display: none">
+				<h3>Étape 2</h3>
+				<button id="back-step-1" type="button">Revenir à l'étape précédente</button><p></p>
+				<fieldset class="mail-only host">
+					<legend>Hôte</legend>
+					<div>
+						<label>Nom :</label>
+						<input type="text" id="name" name="name">
+					</div><p></p>
+					<div>
+						<label>Mail :</label>
+						<input class="mail-only" type="text" id="mail" name="mail">
+					</div><p></p>
+					<div>
+						<label>Mot de passe :</label>
+						<input class="mail-only" type="password" id="password" name="password">
+					</div>
+				</fieldset><p></p>
+				<fieldset class="participant">
+					<div>
+						<label>Nom :</label>
+						<input type="text" id="amount" name="amount">
+					</div><p></p>
+					<div>
+						<label>Mail :</label>
+						<input class="mail-only" type="text" id="amount" name="amount">
+					</div>
+				</fieldset>
+				<p></p><button class="add-participant" type="button">Ajouter un participant</button>
+				<p></p><button id="confirm-step-2" type="button">Valider et passer à l'étape suivante</button>
+			</div>
+
+			<div id="step-3" style="display: none">
+				<h3>Étape 3</h3>
+				<button id="back-step-2" type="button">Revenir à l'étape précédente</button><p></p>
+				<fieldset>
+					<div>
+						<label>Mode d'exclusion :</label>
+						<div>
+							<input type="radio" id="blacklist" name="exclusion" value="blacklist">
+							<label for="blacklist">Blacklists</label>
+						</div>
+						<div>
+							<input type="radio" id="whitelist" name="exclusion" value="whitelist">
+							<label for="whitelist">Whitelists</label>
+						</div>
+						<div>
+							<input type="radio" id="none" name="exclusion" value="none">
+							<label for="none">Pas d'exclusion</label>
+						</div>
+					</div><p></p>
+					<div>
+						<input type="checkbox" id="self-unpickable" name="self-unpickable" checked>
+						<label for="self-unpickable">Impossible de se piocher soit-même</label>
+					</div>
+				</fieldset><p></p>
+
+				<fieldset>
+					<legend>Pour chaque participant</legend>
+					<button class="add-to-list" type="button">Ajouter une personne sur la liste</button>
+					<select name="cars" id="cars">
+						<option value="volvo">Volvo</option>
+						<option value="saab">Saab</option>
+						<option value="mercedes">Mercedes</option>
+						<option value="audi">Audi</option>
+					</select>
+				</fieldset>
+				<p></p><button id="confirm-step-3" type="button">Valider et lancer le tirage</button>
+			</div>
+		</div>
+
+		<div id="results" style="display: none">
+			<h2>Résultats</h2>
+		</div>
+
+
+	</main></body>
+
+	<footer>
+		<script src="./js/script.js"></script>
+	</footer>
+</html>
