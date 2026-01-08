@@ -1,0 +1,2 @@
+
+ça ira pour l'instant. En attendant, on a un plus gros problème : pour chaque participant, une fois que tu as sélectionner une personne à exclure, il n'est plus possible de désélectionner toutes les personnes. Pour être précis, avec Alice Bob Charles David et Eve : sous le nom d'Alice, il y a les prénoms de Bob Charles David et Eve

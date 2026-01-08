@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Secret Santa</title>
+  <link rel="stylesheet" href="github-style.css">
+  <link rel="stylesheet" href="secret-santa.css">
+</head>
+
+<body>
+
+  <main class="container mt-4">
+
+    <h1>🎄 Secret Santa</h1>
+
+    <details class="section-toggle mb-4">
+      <summary class="h3 mb-2">Qu’est-ce que le Secret Santa ?</summary>
+      <div class="markdown-body">
+        <p>
+          Le Secret Santa (ou Père Noël surprise) consiste à tirer au sort,
+          de manière secrète, la personne à qui chacun devra offrir un cadeau.
+        </p>
+      </div>
+    </details>
+
+    <details class="section-toggle mb-4">
+      <summary class="h3 mb-2">Comment utiliser ce site</summary>
+      <div class="markdown-body">
+      <ol>
+        <li>Ajoutez tous les participants</li>
+        <li>Définissez les exclusions si nécessaire</li>
+        <li>Lancez le tirage</li>
+        <li>Chaque participant révèle sa carte à tour de rôle</li>
+      </ol>
+      </div>
+    </details>
+
+    <details class="section-toggle" open>
+      <summary class="h3 mb-2">Procéder au tirage</summary>
+
+      <section>
+        <h2>Mode de fonctionnement</h2>
+        <label>
+          <input type="radio" name="mode" value="local" checked />
+          Présentiel
+        </label>
+        <label>
+          <input type="radio" name="mode" value="email" disabled />
+          Envoi par email (bientôt disponible)
+        </label>
+      </section>
+
+      <section>
+        <h2>Ajouter un participant</h2>
+
+        <form id="add-user-form">
+          <input type="text" id="prenom" placeholder="Prénom" required />
+          <input type="text" id="nom" placeholder="Nom" required />
+          <button type="submit">Ajouter</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Participants</h2>
+        <div id="users-list"></div>
+      </section>
+
+      <section>
+        <button id="draw-button">🎁 Lancer le tirage</button>
+        <p id="error" class="error"></p>
+      </section>
+
+      <section id="cards-section" class="d-none">
+        <h2>Révélation des cartes</h2>
+        <div id="cards"></div>
+      </section>
+
+    </details>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
