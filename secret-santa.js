@@ -4,6 +4,17 @@ const state = {
   mode: "local",
 };
 
+let openedCard = null;
+let editingUserId = null;
+
+// Confirmation avant de quitter la page
+window.addEventListener('beforeunload', function (e) {
+  if (state.users.length > 0) {
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
+
 const usersList = document.getElementById("users-list");
 const form = document.getElementById("add-user-form");
 const drawButton = document.getElementById("draw-button");
@@ -24,11 +35,98 @@ function renderUsers() {
     // Création de la carte
     const card = document.createElement("div");
     card.className = "user-card";
+    const isEditing = editingUserId === user.id;
 
-    // Nom du participant
-    const title = document.createElement("strong");
-    title.textContent = user.nom;
-    card.appendChild(title);
+    // Suppression de participants
+    if (!isEditing) {
+      const deleteBtn = document.createElement("span");
+      deleteBtn.className = "delete-user";
+      deleteBtn.textContent = "🗑️";
+      deleteBtn.title = `Supprimer ${user.nom}`;
+
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        state.users = state.users.filter(u => u.id !== user.id);
+        state.users.forEach(u => {
+          u.exclusions = u.exclusions.filter(id => id !== user.id);
+        });
+        renderUsers();
+      });
+      card.appendChild(deleteBtn);
+    }
+
+    // Edition de participant
+    if (!isEditing) {
+      const editBtn = document.createElement("span");
+      editBtn.className = "edit-user";
+      editBtn.textContent = "✏️";
+      editBtn.title = `Modifier ${user.nom}`;
+
+      editBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        editingUserId = user.id;
+        renderUsers();
+      });
+
+      card.appendChild(editBtn);
+    }
+
+    if (isEditing) {
+      // Annuler
+      const cancelBtn = document.createElement("span");
+      cancelBtn.className = "cancel-edit";
+      cancelBtn.textContent = "✕";
+
+      cancelBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        cancelEdit();
+      });
+
+      card.appendChild(cancelBtn);
+
+      // Sauvegarder
+      const saveBtn = document.createElement("span");
+      saveBtn.className = "save-edit";
+      saveBtn.textContent = "✔";
+
+      saveBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const input = card.querySelector("input");
+        saveEdit(user, input.value);
+      });
+
+      card.appendChild(saveBtn);
+
+      // INPUT édition
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = user.nom;
+      input.className = "edit-input";
+
+      // Auto focus + sélection
+      setTimeout(() => {
+        input.focus();
+        input.select();
+      });
+
+      // ENTER = valider
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") saveEdit(user, input.value);
+        if (e.key === "Escape") cancelEdit();
+      });
+
+      // Blur = valider
+      input.addEventListener("blur", () => {
+        saveEdit(user, input.value);
+      });
+
+      card.appendChild(input);
+    } else {
+      // MODE NORMAL
+      const title = document.createElement("strong");
+      title.textContent = user.nom;
+      card.appendChild(title);
+    }
 
     // Liste des exclusions (checkboxes)
     const list = document.createElement("div");
@@ -65,6 +163,26 @@ function renderUsers() {
   });
 }
 
+function saveEdit(user, newName) {
+  const nom = newName.trim();
+
+  if (!nom) return;
+
+  // Vérification doublon
+  if (state.users.some(u => u.id !== user.id && u.nom.toLowerCase() === nom.toLowerCase())) {
+    alert("Ce nom est déjà utilisé.");
+    return;
+  }
+
+  user.nom = nom;
+  editingUserId = null;
+  renderUsers();
+}
+
+function cancelEdit() {
+  editingUserId = null;
+  renderUsers();
+}
 
 /* ---------- Add user ---------- */
 
@@ -179,7 +297,28 @@ function renderCards() {
     card.appendChild(inner);
 
     card.addEventListener("click", () => {
-      card.classList.toggle("is-flipped");
+
+      // Aucune carte ouverte → on ouvre celle-ci
+      if (openedCard === null) {
+        card.classList.add("is-flipped");
+        openedCard = card;
+        return;
+      }
+
+      // Clic sur la carte déjà ouverte → on la referme
+      if (openedCard === card) {
+        card.classList.remove("is-flipped");
+        openedCard = null;
+        return;
+      }
+
+      // Une autre carte est déjà ouverte → action interdite
+      openedCard.classList.add("shake");
+
+      // Retire la classe après l’animation pour pouvoir rejouer l’effet
+      setTimeout(() => {
+        openedCard.classList.remove("shake");
+      }, 300);
     });
 
     cardsDiv.appendChild(card);
@@ -204,5 +343,13 @@ drawButton.addEventListener("click", () => {
   draw();
   state.drawCompleted = true;
   cardsSection.classList.remove("d-none");
+  openedCard = null;
   renderCards();
+});
+
+/* ---------- Reset button ---------- */
+
+const resetButton = document.getElementById("reset-button");
+resetButton.addEventListener("click", () => {
+  location.reload();
 });
